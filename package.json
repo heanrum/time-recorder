@@ -2,7 +2,7 @@
   "name": "time-recorder",
   "displayName": "Time Recorder",
   "description": "A plugin to record the spent time of your various activities.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "MiracleH",
   "engines": {
     "vscode": "^1.90.0"
@@ -53,6 +53,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/heanrum/TimeRecorder.git"
+    "url": "https://github.com/heanrum/time-recorder.git"
   }
 }

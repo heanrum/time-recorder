@@ -8,12 +8,15 @@ export class ActivityNameBar {
     private statusBar: StatusBarItem | undefined;
     private preActivityName : string | undefined;
     private activityDoing : boolean = false;
-    private lastActivityStartDate : moment.Moment | undefined;
+    private activityDoingLable = "[Start]";
 
     public updateActivityName() {
         if (!this.statusBar) {
             this.statusBar = window.createStatusBarItem(StatusBarAlignment.Right);
         }
+
+        this.statusBar.text = 'Start An Activity';
+        this.tryResumeAnActivity();
 
         let showInputBoxCommand = vscode.commands.registerCommand('time-recorder.showInputBoxCommand', async () => {
             if(!this.activityDoing){
@@ -30,9 +33,33 @@ export class ActivityNameBar {
             }
         });
 
-        this.statusBar.text = 'Start An Activity';
         this.statusBar.command = 'time-recorder.showInputBoxCommand';
         this.statusBar.show();
+    }
+
+    private tryResumeAnActivity()
+    {
+        const filePath = vscode.workspace.getConfiguration('time-recorder').get<string>('filepath');
+        if(filePath && filePath !== ''){
+            fs.readFile(filePath!, 'utf-8', (err, data) => {
+                if (err) {
+                    vscode.window.showErrorMessage(`Failed Open File ${filePath}`);
+                }
+                else
+                {
+                    const str = data.substring(data.length-this.activityDoingLable.length);
+                    if(str === this.activityDoingLable)
+                    {
+                        this.preActivityName = data.substring(data.lastIndexOf(":")+1, data.lastIndexOf(`${this.activityDoingLable}`)).trim();
+                        if(this.preActivityName)
+                        {
+                            this.statusBar!.text = this.preActivityName+' Doing';
+                            this.activityDoing = true;
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private async startAnActivity()
@@ -41,8 +68,8 @@ export class ActivityNameBar {
         if(this.preActivityName)
         {
             this.statusBar!.text = this.preActivityName+' Doing';
-            this.lastActivityStartDate = moment();
             this.activityDoing = true;
+            this.writeFile(`\n- ${this.formatDate(moment())}:${this.preActivityName}\t${this.activityDoingLable}`);
         }
     }
 
@@ -50,14 +77,14 @@ export class ActivityNameBar {
     {
         this.activityDoing = false;
         this.statusBar!.text = 'Start An Activity';
-        this.writeFile();
+        this.writeFile(`\n- ${this.formatDate(moment())}:${this.preActivityName}\t[End]`);
     }
 
-    private writeFile()
+    private writeFile(msg : string)
     {
         const filePath = vscode.workspace.getConfiguration('time-recorder').get<string>('filepath');
         if(filePath && filePath !== ''){
-            fs.appendFile(filePath!, `- ${this.formatDate(this.lastActivityStartDate!)}:${this.preActivityName} Start\n- ${this.formatDate(moment())}-:${this.preActivityName} End\n`, err => {
+            fs.appendFile(filePath!, msg, err => {
                 if (err) {
                     vscode.window.showErrorMessage('Failed Record');
                 } else {
