@@ -1,8 +1,9 @@
-# Change Log
+## [0.2.0]
 
-All notable changes to the "time-recorder" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- Fix bug about sharing activity state.
+- Add recording days.
+- Add Icon
+- Add MIT License
 
 ## [0.1.0]
 

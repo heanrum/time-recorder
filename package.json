@@ -2,8 +2,10 @@
   "name": "time-recorder",
   "displayName": "Time Recorder",
   "description": "A plugin to record the spent time of your various activities.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "MiracleH",
+  "icon": "res/calendar.png",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -11,7 +13,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -43,6 +45,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "@vscode/test-electron": "^2.3.2",
+    "esbuild": "^0.21.5",
     "eslint": "^8.41.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",

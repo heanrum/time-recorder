@@ -7,7 +7,13 @@ import { ActivityNameBar } from './status_bar_view';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	let activityNameBar = new ActivityNameBar();
-    activityNameBar.updateActivityName();
+    activityNameBar.init();
+    vscode.window.onDidChangeWindowState((state) => {
+        if (state.focused)
+        {
+            activityNameBar.refreshActivityState();
+        }
+    });
 }
 
 // This method is called when your extension is deactivated
